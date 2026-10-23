@@ -67,6 +67,28 @@ describe('App (e2e)', () => {
     ]);
   });
 
+  it('POST /api/v1/rotate rotates the selected pages', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/rotate')
+      .attach('file', await pdfWithPages(2), { ...pdfFile, filename: 'a.pdf' })
+      .field('angle', '90')
+      .field('pages', '2')
+      .responseType('blob')
+      .expect(200)
+      .expect('Content-Type', 'application/pdf');
+
+    const pages = (await PDFDocument.load(res.body)).getPages();
+    expect(pages.map((page) => page.getRotation().angle)).toEqual([0, 90]);
+  });
+
+  it('POST /api/v1/rotate rejects an invalid angle', async () => {
+    return request(app.getHttpServer())
+      .post('/api/v1/rotate')
+      .attach('file', await pdfWithPages(1), { ...pdfFile, filename: 'a.pdf' })
+      .field('angle', '45')
+      .expect(400);
+  });
+
   it('POST /api/v1/compress without a file returns 422', () => {
     return request(app.getHttpServer()).post('/api/v1/compress').expect(422);
   });
