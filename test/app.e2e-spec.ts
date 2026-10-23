@@ -89,6 +89,19 @@ describe('App (e2e)', () => {
       .expect(400);
   });
 
+  it('POST /api/v1/organize returns the pages in the new order', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/organize')
+      .attach('file', await pdfWithPages(3), { ...pdfFile, filename: 'a.pdf' })
+      .field('order', '3,1')
+      .responseType('blob')
+      .expect(200)
+      .expect('Content-Type', 'application/pdf')
+      .expect('Content-Disposition', 'attachment; filename="organized.pdf"');
+
+    expect((await PDFDocument.load(res.body)).getPageCount()).toBe(2);
+  });
+
   it('POST /api/v1/compress without a file returns 422', () => {
     return request(app.getHttpServer()).post('/api/v1/compress').expect(422);
   });

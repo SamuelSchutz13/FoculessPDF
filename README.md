@@ -47,7 +47,7 @@ npm run start:dev       # http://localhost:3000/docs
 | POST   | `/security/unlock`      | `file`, `password`              | PDF   |
 
 Todas as rotas POST recebem `multipart/form-data`. Os arquivos são validados (tipo e tamanho máx. 50 MB) e os campos via `class-validator`.
-Implementados: `merge`, `split`, `rotate`. Os demais services ainda lançam `501 Not Implemented`.
+Implementados: `merge`, `split`, `rotate`, `organize`. Os demais services ainda lançam `501 Not Implemented`.
 
 ## Estrutura
 
