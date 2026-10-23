@@ -18,36 +18,36 @@ npm run start:dev       # http://localhost:3000/docs
 
 ## Scripts
 
-| Script             | Descrição                         |
-| ------------------ | --------------------------------- |
-| `npm run start:dev` | Sobe em modo watch               |
-| `npm run build`    | Compila para `dist/`              |
-| `npm run start:prod` | Roda o build                    |
-| `npm run lint`     | Biome (lint + formatação + imports) |
-| `npm run lint:fix` | Biome com correções automáticas   |
-| `npm test`         | Testes unitários                  |
-| `npm run test:cov` | Cobertura                         |
-| `npm run test:e2e` | Testes e2e                        |
+| Script               | Descrição                           |
+| -------------------- | ----------------------------------- |
+| `npm run start:dev`  | Sobe em modo watch                  |
+| `npm run build`      | Compila para `dist/`                |
+| `npm run start:prod` | Roda o build                        |
+| `npm run lint`       | Biome (lint + formatação + imports) |
+| `npm run lint:fix`   | Biome com correções automáticas     |
+| `npm test`           | Testes unitários                    |
+| `npm run test:cov`   | Cobertura                           |
+| `npm run test:e2e`   | Testes e2e                          |
 
 ## Endpoints (`/api/v1`)
 
-| Método | Rota                          | Entrada                         | Saída |
-| ------ | ----------------------------- | ------------------------------- | ----- |
-| GET    | `/health`                     | —                               | JSON  |
-| POST   | `/merge`                      | `files[]` (2–20 PDFs)           | PDF   |
-| POST   | `/split`                      | `file`, `ranges` (`1-3,5`)      | ZIP   |
-| POST   | `/compress`                   | `file`, `level`                 | PDF   |
-| POST   | `/rotate`                     | `file`, `angle`, `pages?`       | PDF   |
-| POST   | `/organize`                   | `file`, `order` (`3,1,2`)       | PDF   |
-| POST   | `/convert/image-to-pdf`       | `files[]` (JPEG/PNG)            | PDF   |
-| POST   | `/convert/pdf-to-image`       | `file`, `format`                | ZIP   |
-| POST   | `/watermark`                  | `file`, `text`, `opacity?`      | PDF   |
-| POST   | `/page-numbers`               | `file`, `position?`, `startAt?` | PDF   |
-| POST   | `/security/protect`           | `file`, `password`              | PDF   |
-| POST   | `/security/unlock`            | `file`, `password`              | PDF   |
+| Método | Rota                    | Entrada                         | Saída |
+| ------ | ----------------------- | ------------------------------- | ----- |
+| GET    | `/health`               | —                               | JSON  |
+| POST   | `/merge`                | `files[]` (2–20 PDFs)           | PDF   |
+| POST   | `/split`                | `file`, `ranges` (`1-3,5`)      | ZIP   |
+| POST   | `/compress`             | `file`, `level`                 | PDF   |
+| POST   | `/rotate`               | `file`, `angle`, `pages?`       | PDF   |
+| POST   | `/organize`             | `file`, `order` (`3,1,2`)       | PDF   |
+| POST   | `/convert/image-to-pdf` | `files[]` (JPEG/PNG)            | PDF   |
+| POST   | `/convert/pdf-to-image` | `file`, `format`                | ZIP   |
+| POST   | `/watermark`            | `file`, `text`, `opacity?`      | PDF   |
+| POST   | `/page-numbers`         | `file`, `position?`, `startAt?` | PDF   |
+| POST   | `/security/protect`     | `file`, `password`              | PDF   |
+| POST   | `/security/unlock`      | `file`, `password`              | PDF   |
 
 Todas as rotas POST recebem `multipart/form-data`. Os arquivos são validados (tipo e tamanho máx. 50 MB) e os campos via `class-validator`.
-Os services ainda lançam `501 Not Implemented`: a lógica de PDF entra em cada `*.service.ts`.
+Implementados: `merge`, `split`. Os demais services ainda lançam `501 Not Implemented`.
 
 ## Estrutura
 

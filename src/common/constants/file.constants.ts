@@ -1,5 +1,7 @@
 export const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024;
 export const MAX_FILES = 20;
+/** Each split range becomes a full PDF in memory, so cap how many one request can create. */
+export const MAX_SPLIT_PARTS = 100;
 
 export const MimeType = {
   PDF: 'application/pdf',
