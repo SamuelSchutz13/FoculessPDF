@@ -13,8 +13,30 @@ API REST para ferramentas de arquivos PDF (inspirada no iLovePDF), feita com Nes
 
 ```bash
 npm install
+cp .env.example .env    # opcional: todos os valores têm padrão
 npm run start:dev       # http://localhost:3000/docs
 ```
+
+## Configuração (`.env`)
+
+| Variável                | Padrão                  | Descrição                                          |
+| ----------------------- | ----------------------- | -------------------------------------------------- |
+| `PORT`                  | `3000`                  | Porta da API                                       |
+| `CORS_ORIGINS`          | `http://localhost:5173` | Origens do front-end liberadas (separadas por `,`) |
+| `MAX_FILE_SIZE_MB`      | `50`                    | Tamanho máximo por arquivo                         |
+| `RATE_LIMIT_PER_MINUTE` | `30`                    | Requisições por minuto, por IP e por rota          |
+
+Valores inválidos (ex.: `PORT=abc`) impedem a API de subir, com uma mensagem clara.
+
+## Erros
+
+Toda resposta de erro tem o mesmo formato, com `message` sempre como lista:
+
+```json
+{ "statusCode": 400, "error": "Bad Request", "message": ["order must look like \"3,1,2\""] }
+```
+
+Erros inesperados (500) são registrados no log e retornam só `"Internal server error"`, sem detalhes internos.
 
 ## Scripts
 

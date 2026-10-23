@@ -102,8 +102,19 @@ describe('App (e2e)', () => {
     expect((await PDFDocument.load(res.body)).getPageCount()).toBe(2);
   });
 
-  it('POST /api/v1/compress without a file returns 422', () => {
-    return request(app.getHttpServer()).post('/api/v1/compress').expect(422);
+  it('POST /api/v1/compress without a file returns 422 in the standard error shape', () => {
+    return request(app.getHttpServer())
+      .post('/api/v1/compress')
+      .expect(422)
+      .expect({ statusCode: 422, error: 'Unprocessable Entity', message: ['File is required'] });
+  });
+
+  it('allows the front-end origin and exposes Content-Disposition', () => {
+    return request(app.getHttpServer())
+      .get('/api/v1/health')
+      .set('Origin', 'http://localhost:5173')
+      .expect('Access-Control-Allow-Origin', 'http://localhost:5173')
+      .expect('Access-Control-Expose-Headers', 'Content-Disposition');
   });
 
   it('POST /api/v1/compress rejects a non-PDF file', () => {
