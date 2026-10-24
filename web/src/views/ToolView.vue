@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ApiError, runTool } from '@/lib/api'
-import { saveFile } from '@/lib/download'
+import { formatSize, saveFile } from '@/lib/download'
 import type { Tool } from '@/lib/tools'
 
 const props = defineProps<{ tool: Tool }>()
@@ -61,6 +61,14 @@ function moveFile(index: number, offset: number) {
   files.value = next
 }
 
+function sizeReport(resultSize: number): string | undefined {
+  if (!props.tool.reportsSize) return undefined
+  const originalSize = files.value.reduce((total, file) => total + file.size, 0)
+  if (resultSize >= originalSize) return 'O arquivo já estava otimizado.'
+  const saved = Math.round((1 - resultSize / originalSize) * 100)
+  return `${formatSize(originalSize)} → ${formatSize(resultSize)} (−${saved}%)`
+}
+
 async function submit() {
   const form = new FormData()
   for (const file of files.value) form.append(props.tool.fileField, file)
@@ -74,7 +82,7 @@ async function submit() {
       progress.value = percent
     })
     saveFile(result)
-    toast.success(`Pronto! ${result.filename} foi baixado.`)
+    toast.success(`Pronto! ${result.filename} foi baixado.`, { description: sizeReport(result.blob.size) })
   } catch (error) {
     const messages = error instanceof ApiError ? error.messages : ['Erro inesperado.']
     toast.error('Não foi possível processar o arquivo', { description: messages.join('\n') })

@@ -48,6 +48,8 @@ export interface Tool {
   minFiles: number
   maxFiles: number
   fields: ToolField[]
+  /** Shows how much smaller the result is than the upload (for compress). */
+  reportsSize?: boolean
   available: boolean
 }
 
@@ -148,8 +150,21 @@ export const tools: Tool[] = [
     icon: Minimize2,
     endpoint: '/compress',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'select',
+        name: 'level',
+        label: 'Nível de compressão',
+        options: [
+          { value: 'recommended', label: 'Recomendado (boa qualidade, bem menor)' },
+          { value: 'low', label: 'Baixo (qualidade máxima)' },
+          { value: 'extreme', label: 'Extremo (menor arquivo possível)' },
+        ],
+        default: 'recommended',
+      },
+    ],
+    reportsSize: true,
+    available: true,
   },
   {
     id: 'image-to-pdf',
