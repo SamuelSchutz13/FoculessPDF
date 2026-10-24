@@ -5,7 +5,11 @@
 <h1 align="center">FoculessPDF</h1>
 
 <p align="center">
-  Ferramentas de PDF sem anúncios, sem telemetria e sem cadastro: junte, divida, comprima, converta e proteja seus arquivos.
+  <b>English</b> · <a href="README.pt-BR.md">Português (Brasil)</a>
+</p>
+
+<p align="center">
+  PDF tools with no ads, no telemetry and no sign-up: merge, split, compress, convert and protect your files.
 </p>
 
 <p align="center">
@@ -19,171 +23,171 @@
 </p>
 
 > [!NOTE]
-> **Seus arquivos não ficam salvos.** Os uploads são processados na memória da API e descartados assim que a resposta é enviada: nada é gravado em disco. O site não usa analytics, cookies de rastreamento nem fontes ou scripts de terceiros. O FoculessPDF não tem relação com o iLovePDF; a ideia é inspirada nele.
+> **Your files are never stored.** Uploads are processed in the API's memory and discarded as soon as the response is sent: nothing is written to disk. The site uses no analytics, no tracking cookies and no third-party fonts or scripts. FoculessPDF is not affiliated with iLovePDF; the idea is inspired by it.
 
-## Funcionalidades
+## Features
 
-- **Organizar**
-  - **Juntar PDF**: combine de 2 a 20 PDFs, na ordem que você escolher.
-  - **Dividir PDF**: separe intervalos (`1-3,5,8-10`) em PDFs independentes, entregues num ZIP.
-  - **Organizar PDF**: reordene páginas (`3,1,2`); as que ficarem de fora são removidas.
-  - **Girar PDF**: 90°, 180° ou 270°, em todas as páginas ou só nas escolhidas, somando à rotação atual.
-- **Otimizar**
-  - **Comprimir PDF**: reduz e recomprime as fotos do documento em três níveis. O site mostra quanto o arquivo diminuiu.
-- **Converter**
-  - **JPG/PNG para PDF**: uma página A4 por imagem, deitada se a imagem for larga. Fotos de celular saem na orientação certa (EXIF).
-  - **PDF para JPG/PNG**: cada página vira uma imagem de 150 DPI, entregues num ZIP.
-- **Editar**
-  - **Marca d'água**: texto na diagonal, centralizado e dimensionado pela página, em três intensidades.
-  - **Números de página**: seis posições e número inicial configurável.
-- **Segurança**
-  - **Proteger PDF**: criptografia AES-256; a senha é pedida para abrir, mas imprimir e copiar continuam liberados.
-  - **Desbloquear PDF**: remove a senha de um PDF protegido (com a senha atual).
-- **Site** em português e inglês, com **modo claro e escuro** em tons pastéis, arrastar e soltar, barra de progresso e download automático com o nome certo.
-- **API documentada** com Swagger em `/docs`, para usar as ferramentas sem o site.
+- **Organize**
+  - **Merge PDF**: combine 2 to 20 PDFs, in the order you choose.
+  - **Split PDF**: extract page ranges (`1-3,5,8-10`) into separate PDFs, delivered as a ZIP.
+  - **Organize PDF**: reorder pages (`3,1,2`); pages left out are removed.
+  - **Rotate PDF**: 90°, 180° or 270°, on every page or only the selected ones, on top of the current rotation.
+- **Optimize**
+  - **Compress PDF**: downscales and re-encodes the document's photos at three levels. The site shows how much smaller the file got.
+- **Convert**
+  - **JPG/PNG to PDF**: one A4 page per image, landscape for wide images. Phone photos come out the right way up (EXIF).
+  - **PDF to JPG/PNG**: every page becomes a 150 DPI image, delivered as a ZIP.
+- **Edit**
+  - **Watermark**: diagonal text, centered and sized to the page, at three intensities.
+  - **Page numbers**: six positions and a configurable starting number.
+- **Security**
+  - **Protect PDF**: AES-256 encryption; the password is required to open the file, while printing and copying stay allowed.
+  - **Unlock PDF**: removes the password from a protected PDF (given the current password).
+- **Website** in English and Portuguese, with pastel **light and dark modes**, drag and drop, upload progress and automatic download with the right file name.
+- **Documented API** with Swagger at `/docs`, to use the tools without the website.
 
-## Como rodar
+## Getting started
 
-Você só precisa do [Node.js](https://nodejs.org) **22.13 ou mais novo**. Não há chave de API nem programa externo para instalar: nem Ghostscript, nem LibreOffice. O arquivo `.env` é opcional.
+All you need is [Node.js](https://nodejs.org) **22.13 or newer**. There is no API key and no external program to install: no Ghostscript, no LibreOffice. The `.env` file is optional.
 
 ```sh
 git clone https://github.com/SamuelSchutz13/FoculessPDF.git
 cd FoculessPDF
 
-# terminal 1: API (http://localhost:3000, documentação em /docs)
+# terminal 1: API (http://localhost:3000, docs at /docs)
 npm install
 npm run start:dev
 
-# terminal 2: site (http://localhost:5173)
+# terminal 2: website (http://localhost:5173)
 cd web
 npm install
 npm run dev
 ```
 
-Abra **http://localhost:5173**. O site chama a API em `http://localhost:3000/api/v1`, e a API libera essa origem no CORS.
+Open **http://localhost:5173**. The website calls the API at `http://localhost:3000/api/v1`, and the API allows that origin through CORS.
 
-### Configuração
+### Configuration
 
-Todas as variáveis têm valor padrão. Para mudar, copie o `.env.example` para `.env`, na raiz para a API ou em `web/` para o site.
+Every variable has a default. To change one, copy `.env.example` to `.env`, at the root for the API or in `web/` for the website.
 
-| Onde | Variável                | Padrão                         | Descrição                                       |
-| ---- | ----------------------- | ------------------------------ | ----------------------------------------------- |
-| API  | `PORT`                  | `3000`                         | Porta da API                                    |
-| API  | `CORS_ORIGINS`          | `http://localhost:5173`        | Origens do site liberadas, separadas por `,`    |
-| API  | `MAX_FILE_SIZE_MB`      | `50`                           | Tamanho máximo por arquivo                      |
-| API  | `RATE_LIMIT_PER_MINUTE` | `30`                           | Requisições por minuto, por IP e por ferramenta |
-| Site | `VITE_API_URL`          | `http://localhost:3000/api/v1` | Endereço da API                                 |
-| Site | `VITE_MAX_FILE_SIZE_MB` | `50`                           | Mesmo limite da API, checado antes do upload    |
+| Where   | Variable                | Default                        | Description                                     |
+| ------- | ----------------------- | ------------------------------ | ----------------------------------------------- |
+| API     | `PORT`                  | `3000`                         | API port                                        |
+| API     | `CORS_ORIGINS`          | `http://localhost:5173`        | Allowed website origins, comma-separated        |
+| API     | `MAX_FILE_SIZE_MB`      | `50`                           | Maximum size per file                           |
+| API     | `RATE_LIMIT_PER_MINUTE` | `30`                           | Requests per minute, per IP and per tool        |
+| Website | `VITE_API_URL`          | `http://localhost:3000/api/v1` | API address                                     |
+| Website | `VITE_MAX_FILE_SIZE_MB` | `50`                           | Same limit as the API, checked before uploading |
 
-Um valor inválido (ex.: `PORT=abc`) impede a API de subir e mostra uma mensagem dizendo qual variável está errada.
+An invalid value (e.g. `PORT=abc`) stops the API from starting, with a message naming the variable.
 
 ### Scripts
 
-| Pasta | Comando              | O que faz                                           |
-| ----- | -------------------- | --------------------------------------------------- |
-| raiz  | `npm run start:dev`  | API com recarga automática                          |
-| raiz  | `npm run build`      | Build da API em `dist/`                             |
-| raiz  | `npm run start:prod` | Roda o build da API                                 |
-| raiz  | `npm test`           | Testes unitários da API                             |
-| raiz  | `npm run test:e2e`   | Testes de ponta a ponta (HTTP) da API               |
-| raiz  | `npm run test:cov`   | Testes com cobertura                                |
-| raiz  | `npm run lint`       | Biome: lint, formatação e organização dos imports   |
-| raiz  | `npm run lint:fix`   | Biome com correções automáticas                     |
-| `web` | `npm run dev`        | Site em modo de desenvolvimento                     |
-| `web` | `npm test`           | Testes do cliente da API e das traduções            |
-| `web` | `npm run type-check` | Checagem de tipos (`vue-tsc`)                       |
-| `web` | `npm run build`      | Checagem de tipos e build de produção em `web/dist` |
+| Folder | Command              | What it does                                       |
+| ------ | -------------------- | -------------------------------------------------- |
+| root   | `npm run start:dev`  | API with hot reload                                |
+| root   | `npm run build`      | Builds the API into `dist/`                        |
+| root   | `npm run start:prod` | Runs the API build                                 |
+| root   | `npm test`           | API unit tests                                     |
+| root   | `npm run test:e2e`   | API end-to-end (HTTP) tests                        |
+| root   | `npm run test:cov`   | Tests with coverage                                |
+| root   | `npm run lint`       | Biome: lint, formatting and import sorting         |
+| root   | `npm run lint:fix`   | Biome with automatic fixes                         |
+| `web`  | `npm run dev`        | Website in development mode                        |
+| `web`  | `npm test`           | Tests for the API client and the translations      |
+| `web`  | `npm run type-check` | Type checking (`vue-tsc`)                          |
+| `web`  | `npm run build`      | Type checking and production build into `web/dist` |
 
-## Como funciona
+## How it works
 
 ```
-web/   Vue 3 + Vite + shadcn-vue   →  multipart/form-data  →   API NestJS (/api/v1)   →  pdf-lib · pdf.js · canvas
+web/   Vue 3 + Vite + shadcn-vue   →  multipart/form-data  →   NestJS API (/api/v1)   →  pdf-lib · pdf.js · canvas
 ```
 
-- **Uploads**: os arquivos ficam só na memória (Multer). Antes de chegar à ferramenta, a API confere o tipo pelos bytes do arquivo, e não pela extensão, e o tamanho máximo. Arquivo corrompido ou protegido por senha vira um erro `422` com mensagem clara, nunca um `500`.
-- **Edição de PDF**: [`@cantoo/pdf-lib`](https://github.com/cantoo-scribe/pdf-lib), um fork mantido da pdf-lib que também faz a criptografia AES-256 de proteger/desbloquear.
-- **PDF para imagem**: as páginas são renderizadas com o [pdf.js](https://mozilla.github.io/pdf.js/) (o mesmo do Firefox) sobre o [`@napi-rs/canvas`](https://github.com/Brooooooklyn/canvas), que vem com binários prontos e não exige bibliotecas do sistema.
-- **Compressão**: as fotos JPEG do documento são reduzidas e recodificadas, e cada uma só é trocada se ficar menor. O PDF é salvo com object streams comprimidos. Se nada diminuir, a API devolve o arquivo original.
+- **Uploads**: files only live in memory (Multer). Before a file reaches a tool, the API checks its type from the file's bytes, not its extension, and its maximum size. A corrupt or password-protected file becomes a `422` error with a clear message, never a `500`.
+- **PDF editing**: [`@cantoo/pdf-lib`](https://github.com/cantoo-scribe/pdf-lib), a maintained fork of pdf-lib that also handles the AES-256 encryption for protect/unlock.
+- **PDF to image**: pages are rendered with [pdf.js](https://mozilla.github.io/pdf.js/) (the same renderer as Firefox) on [`@napi-rs/canvas`](https://github.com/Brooooooklyn/canvas), which ships prebuilt binaries and needs no system libraries.
+- **Compression**: the document's JPEG photos are downscaled and re-encoded, and each one is only replaced if it gets smaller. The PDF is saved with compressed object streams. If nothing gets smaller, the API returns the original file.
 
-  | Nível       | Qualidade JPEG | Maior lado da imagem |
-  | ----------- | -------------- | -------------------- |
-  | Baixo       | 85%            | 2500 px              |
-  | Recomendado | 70%            | 1800 px              |
-  | Extremo     | 50%            | 1200 px              |
+  | Level       | JPEG quality | Longest image side |
+  | ----------- | ------------ | ------------------ |
+  | Low         | 85%          | 2500 px            |
+  | Recommended | 70%          | 1800 px            |
+  | Extreme     | 50%          | 1200 px            |
 
-- **Erros**: toda resposta de erro tem o mesmo formato, com `message` sempre como lista. Erros inesperados vão para o log e o cliente recebe só `"Internal server error"`.
+- **Errors**: every error response has the same shape, with `message` always a list. Unexpected errors are logged and the client only gets `"Internal server error"`.
 
   ```json
   { "statusCode": 400, "error": "Bad Request", "message": ["order must look like \"3,1,2\""] }
   ```
 
-- **Proteção da API**: limite de requisições por IP e por ferramenta (`429` com `Retry-After`), headers de segurança com helmet e CORS restrito às origens configuradas.
-- **Site**: cada ferramenta é uma entrada em `web/src/lib/tools.ts`, e uma única página genérica monta o upload, os campos e o envio. Os textos ficam em `web/src/i18n/`: o inglês é tipado contra o português, e um teste confere se toda ferramenta e todo campo têm texto nos dois idiomas.
+- **API protection**: rate limiting per IP and per tool (`429` with `Retry-After`), security headers with helmet, and CORS restricted to the configured origins.
+- **Website**: each tool is an entry in `web/src/lib/tools.ts`, and a single generic page builds the upload, the fields and the submission. Texts live in `web/src/i18n/`: English is typed against Portuguese, and a test checks that every tool and every field has its texts in both languages.
 
 ### Endpoints (`/api/v1`)
 
-Todas as rotas `POST` recebem `multipart/form-data` e devolvem o arquivo como download. A documentação interativa fica em **http://localhost:3000/docs**.
+Every `POST` route takes `multipart/form-data` and returns the file as a download. Interactive docs are at **http://localhost:3000/docs**.
 
-| Método | Rota                    | Entrada                                            | Saída |
-| ------ | ----------------------- | -------------------------------------------------- | ----- |
-| GET    | `/health`               | —                                                  | JSON  |
-| POST   | `/merge`                | `files[]` (2–20 PDFs)                              | PDF   |
-| POST   | `/split`                | `file`, `ranges` (`1-3,5`)                         | ZIP   |
-| POST   | `/compress`             | `file`, `level?` (`low`, `recommended`, `extreme`) | PDF   |
-| POST   | `/rotate`               | `file`, `angle` (`90`, `180`, `270`), `pages?`     | PDF   |
-| POST   | `/organize`             | `file`, `order` (`3,1,2`)                          | PDF   |
-| POST   | `/convert/image-to-pdf` | `files[]` (JPEG/PNG, até 20)                       | PDF   |
-| POST   | `/convert/pdf-to-image` | `file`, `format?` (`jpeg`, `png`)                  | ZIP   |
-| POST   | `/watermark`            | `file`, `text`, `opacity?`                         | PDF   |
-| POST   | `/page-numbers`         | `file`, `position?`, `startAt?`                    | PDF   |
-| POST   | `/security/protect`     | `file`, `password` (4–128 caracteres)              | PDF   |
-| POST   | `/security/unlock`      | `file`, `password`                                 | PDF   |
+| Method | Route                   | Input                                              | Output |
+| ------ | ----------------------- | -------------------------------------------------- | ------ |
+| GET    | `/health`               | —                                                  | JSON   |
+| POST   | `/merge`                | `files[]` (2–20 PDFs)                              | PDF    |
+| POST   | `/split`                | `file`, `ranges` (`1-3,5`)                         | ZIP    |
+| POST   | `/compress`             | `file`, `level?` (`low`, `recommended`, `extreme`) | PDF    |
+| POST   | `/rotate`               | `file`, `angle` (`90`, `180`, `270`), `pages?`     | PDF    |
+| POST   | `/organize`             | `file`, `order` (`3,1,2`)                          | PDF    |
+| POST   | `/convert/image-to-pdf` | `files[]` (JPEG/PNG, up to 20)                     | PDF    |
+| POST   | `/convert/pdf-to-image` | `file`, `format?` (`jpeg`, `png`)                  | ZIP    |
+| POST   | `/watermark`            | `file`, `text`, `opacity?`                         | PDF    |
+| POST   | `/page-numbers`         | `file`, `position?`, `startAt?`                    | PDF    |
+| POST   | `/security/protect`     | `file`, `password` (4–128 characters)              | PDF    |
+| POST   | `/security/unlock`      | `file`, `password`                                 | PDF    |
 
-### Estrutura
+### Project structure
 
 ```
 src/                          API (NestJS)
-  main.ts, app.module.ts      bootstrap e registro dos módulos
-  app.setup.ts                prefixo, versão, validação, CORS, helmet, Swagger (usado também no e2e)
-  config/env.ts               leitura e validação do .env
+  main.ts, app.module.ts      bootstrap and module registration
+  app.setup.ts                prefix, versioning, validation, CORS, helmet, Swagger (also used by e2e)
+  config/env.ts               reading and validating .env
   common/
-    pdf/                      abrir PDF com erros claros, intervalos de páginas (+ testes)
-    files/                    validação de upload, resposta de download
-    filters/                  formato único de erro (+ testes)
-    decorators/               @ApiFileOperation (Swagger de upload/download)
-  modules/<ferramenta>/       controller, service (+ testes) e DTOs de cada ferramenta
+    pdf/                      opening PDFs with clear errors, page ranges (+ tests)
+    files/                    upload validation, download response
+    filters/                  single error shape (+ tests)
+    decorators/               @ApiFileOperation (Swagger for upload/download)
+  modules/<tool>/             controller, service (+ tests) and DTOs for each tool
 test/
-  app.e2e-spec.ts             testes HTTP de ponta a ponta
-  fixtures/images.ts          PNG/JPEG gerados para os testes
-web/                          site (Vue) — detalhes em web/README.md
-  src/lib/tools.ts            catálogo das ferramentas
-  src/lib/api.ts              chamada à API, nome do arquivo e mensagens de erro (+ testes)
-  src/i18n/                   português e inglês (+ testes)
-  src/views/                  início e página genérica da ferramenta
-  src/components/             upload, lista de arquivos, ícones, idioma, tema, link do GitHub
+  app.e2e-spec.ts             end-to-end HTTP tests
+  fixtures/images.ts          PNG/JPEG generated for the tests
+web/                          website (Vue) — details in web/README.md
+  src/lib/tools.ts            tool catalog
+  src/lib/api.ts              API calls, file name and error messages (+ tests)
+  src/i18n/                   English and Portuguese (+ tests)
+  src/views/                  home and the generic tool page
+  src/components/             upload, file list, icons, language, theme, GitHub link
 ```
 
-### Adicionando uma ferramenta
+### Adding a tool
 
-1. **API**: crie `src/modules/<nome>/` copiando um módulo existente. O controller usa `FileInterceptor`, `PdfFilePipe`, `@ApiFileOperation` e `fileResponse`. O service abre o PDF com `loadPdf`. Registre o módulo em `src/app.module.ts`.
-2. **Site**: adicione a entrada em `web/src/lib/tools.ts` e os textos em `web/src/i18n/pt-BR.ts` e `en.ts`. O `npm test` em `web` avisa se faltar algum texto.
+1. **API**: create `src/modules/<name>/` by copying an existing module. The controller uses `FileInterceptor`, `PdfFilePipe`, `@ApiFileOperation` and `fileResponse`. The service opens the PDF with `loadPdf`. Register the module in `src/app.module.ts`.
+2. **Website**: add the entry to `web/src/lib/tools.ts` and the texts to `web/src/i18n/pt-BR.ts` and `en.ts`. `npm test` in `web` reports any missing text.
 
-## Limitações conhecidas
+## Known limitations
 
-- **Comprimir** só recomprime fotos JPEG (RGB ou tons de cinza). Imagens em outros formatos, CMYK ou com máscara ficam como estão, então PDFs só de texto diminuem pouco.
-- **PDF para imagem** aceita até 100 páginas por arquivo. A renderização roda na thread principal da API, então uma conversão grande atrasa as outras requisições.
-- **Marca d'água** e **números de página** usam as fontes padrão do PDF: alfabeto latino com acentos funciona; emoji, chinês etc. são recusados com uma mensagem. A marca d'água ignora a rotação própria da página.
-- **Juntar, dividir, organizar e desbloquear** criam um PDF novo a partir das páginas, então marcadores, formulários e metadados (título, autor) do original não são mantidos.
-- Fotos com orientação EXIF espelhada (raras em câmeras) são giradas, mas não espelhadas.
-- As mensagens de erro da API são em inglês, mesmo com o site em português.
-- O limite de requisições fica na memória do processo. Atrás de um proxy (Nginx, Cloudflare) é preciso ativar o `trust proxy`; com mais de uma instância da API, mova o limite para o Redis.
-- No Windows, filtros de rede como o AdGuard interceptam o `localhost` e fazem os testes e2e falharem às vezes com `ECONNRESET`. Coloque o `node.exe` nas exceções.
+- **Compress** only re-encodes JPEG photos (RGB or grayscale). Images in other formats, CMYK or masked images are left as they are, so text-only PDFs barely shrink.
+- **PDF to image** accepts up to 100 pages per file. Rendering runs on the API's main thread, so a large conversion delays other requests.
+- **Watermark** and **page numbers** use the standard PDF fonts: the Latin alphabet with accents works; emoji, Chinese, etc. are rejected with a message. The watermark ignores the page's own rotation.
+- **Merge, split, organize and unlock** build a new PDF from the pages, so bookmarks, forms and metadata (title, author) from the original are not kept.
+- Photos with a mirrored EXIF orientation (rare in cameras) are rotated but not mirrored.
+- API error messages are in English, even when the website is in Portuguese.
+- Rate limiting lives in the process memory. Behind a proxy (Nginx, Cloudflare) you need to enable `trust proxy`; with more than one API instance, move the limits to Redis.
+- On Windows, network filters such as AdGuard intercept `localhost` and make the e2e tests fail now and then with `ECONNRESET`. Add `node.exe` to its exceptions.
 
-## Créditos
+## Credits
 
-- Edição e criptografia de PDF: [`@cantoo/pdf-lib`](https://github.com/cantoo-scribe/pdf-lib) (MIT), fork da [pdf-lib](https://github.com/Hopding/pdf-lib) de Andrew Dillon.
-- Renderização de páginas: [pdf.js](https://github.com/mozilla/pdf.js), da Mozilla (Apache-2.0), sobre o [`@napi-rs/canvas`](https://github.com/Brooooooklyn/canvas) (MIT).
-- Arquivos ZIP: [fflate](https://github.com/101arrowz/fflate) (MIT).
-- API: [NestJS](https://nestjs.com). Site: [Vue](https://vuejs.org), [Vite](https://vite.dev) e [Tailwind CSS](https://tailwindcss.com).
-- Componentes de interface: [shadcn-vue](https://www.shadcn-vue.com) e [Reka UI](https://reka-ui.com). Ícones: [Lucide](https://lucide.dev) e o símbolo do GitHub do [Octicons](https://github.com/primer/octicons) (MIT).
-- Fonte: [Geist](https://vercel.com/font), da Vercel (SIL Open Font License), servida pelo próprio site.
+- PDF editing and encryption: [`@cantoo/pdf-lib`](https://github.com/cantoo-scribe/pdf-lib) (MIT), a fork of Andrew Dillon's [pdf-lib](https://github.com/Hopding/pdf-lib).
+- Page rendering: Mozilla's [pdf.js](https://github.com/mozilla/pdf.js) (Apache-2.0), on [`@napi-rs/canvas`](https://github.com/Brooooooklyn/canvas) (MIT).
+- ZIP files: [fflate](https://github.com/101arrowz/fflate) (MIT).
+- API: [NestJS](https://nestjs.com). Website: [Vue](https://vuejs.org), [Vite](https://vite.dev) and [Tailwind CSS](https://tailwindcss.com).
+- UI components: [shadcn-vue](https://www.shadcn-vue.com) and [Reka UI](https://reka-ui.com). Icons: [Lucide](https://lucide.dev) and the GitHub mark from [Octicons](https://github.com/primer/octicons) (MIT).
+- Font: [Geist](https://vercel.com/font) by Vercel (SIL Open Font License), served by the website itself.
