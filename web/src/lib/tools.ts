@@ -199,8 +199,31 @@ export const tools: Tool[] = [
     icon: Hash,
     endpoint: '/page-numbers',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'select',
+        name: 'position',
+        label: 'Posição',
+        options: [
+          { value: 'bottom-center', label: 'Rodapé, centro' },
+          { value: 'bottom-right', label: 'Rodapé, direita' },
+          { value: 'bottom-left', label: 'Rodapé, esquerda' },
+          { value: 'top-center', label: 'Topo, centro' },
+          { value: 'top-right', label: 'Topo, direita' },
+          { value: 'top-left', label: 'Topo, esquerda' },
+        ],
+        default: 'bottom-center',
+      },
+      {
+        type: 'text',
+        name: 'startAt',
+        label: 'Começar em',
+        placeholder: '1',
+        hint: 'Número da primeira página. Deixe vazio para começar em 1.',
+        required: false,
+      },
+    ],
+    available: true,
   },
   {
     id: 'protect',
