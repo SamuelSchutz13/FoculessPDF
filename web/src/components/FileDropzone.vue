@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { Upload } from '@lucide/vue'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { MAX_FILE_SIZE_MB } from '@/lib/api'
 
 defineProps<{ accept: string; multiple: boolean }>()
 const emit = defineEmits<{ add: [files: File[]] }>()
+const { t } = useI18n()
 
 const input = ref<HTMLInputElement>()
 const dragging = ref(false)
@@ -31,10 +34,10 @@ function onPick() {
     @drop.prevent="onDrop"
   >
     <Upload class="size-8 text-muted-foreground" aria-hidden="true" />
-    <span class="font-medium">
-      Arraste {{ multiple ? 'os arquivos' : 'o arquivo' }} aqui ou clique para escolher
+    <span class="font-medium">{{ multiple ? t('dropzone.multiple') : t('dropzone.single') }}</span>
+    <span class="text-sm text-muted-foreground">
+      {{ t('dropzone.limit', { size: `${MAX_FILE_SIZE_MB} MB` }) }}
     </span>
-    <span class="text-sm text-muted-foreground">Até 50 MB por arquivo</span>
     <input
       ref="input"
       type="file"

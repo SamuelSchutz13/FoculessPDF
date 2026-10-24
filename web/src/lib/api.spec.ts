@@ -1,5 +1,6 @@
 import { AxiosError, AxiosHeaders, type AxiosResponse } from 'axios'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
+import { i18n } from '@/i18n'
 import { errorMessages, filenameFrom } from './api'
 
 const responseWith = (status: number, data: unknown) =>
@@ -19,6 +20,10 @@ describe('filenameFrom', () => {
 })
 
 describe('errorMessages', () => {
+  beforeAll(() => {
+    i18n.global.locale.value = 'pt-BR'
+  })
+
   it('reads the API message list from a Blob body', async () => {
     const body = new Blob([JSON.stringify({ statusCode: 400, message: ['Page 2 appears more than once'] })])
     expect(await errorMessages(axiosError(responseWith(400, body)))).toEqual([

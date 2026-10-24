@@ -10,7 +10,7 @@ export const router = createRouter({
     {
       path: '/:tool',
       component: ToolView,
-      // Unknown or not-yet-available tools go back to the home page.
+      // Unknown tools go back to the home page.
       beforeEnter: (to) => (findTool(String(to.params.tool)) ? true : '/'),
       props: (route) => ({ tool: findTool(String(route.params.tool)) }),
     },
