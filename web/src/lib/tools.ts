@@ -169,8 +169,28 @@ export const tools: Tool[] = [
     icon: Droplet,
     endpoint: '/watermark',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'text',
+        name: 'text',
+        label: 'Texto',
+        placeholder: 'CONFIDENCIAL',
+        hint: 'Aparece na diagonal, no centro de todas as páginas. Até 100 caracteres.',
+        required: true,
+      },
+      {
+        type: 'select',
+        name: 'opacity',
+        label: 'Intensidade',
+        options: [
+          { value: '0.25', label: 'Leve' },
+          { value: '0.5', label: 'Média' },
+          { value: '0.75', label: 'Forte' },
+        ],
+        default: '0.5',
+      },
+    ],
+    available: true,
   },
   {
     id: 'page-numbers',
