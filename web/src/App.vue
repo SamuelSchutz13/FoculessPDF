@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import { FileText } from '@lucide/vue'
+import ThemeToggle from '@/components/ThemeToggle.vue'
 import { Toaster } from '@/components/ui/sonner'
+import { isDark } from '@/lib/theme'
 </script>
 
 <template>
   <div class="min-h-svh bg-background text-foreground">
     <header class="border-b">
-      <div class="mx-auto flex h-14 max-w-5xl items-center px-4">
+      <div class="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
         <RouterLink to="/" class="flex items-center gap-2 font-bold">
           <FileText class="size-5 text-primary" aria-hidden="true" />
           FoculessPDF
         </RouterLink>
+        <ThemeToggle />
       </div>
     </header>
 
@@ -19,6 +22,6 @@ import { Toaster } from '@/components/ui/sonner'
       <RouterView :key="$route.path" />
     </main>
 
-    <Toaster rich-colors position="top-center" />
+    <Toaster rich-colors position="top-center" :theme="isDark ? 'dark' : 'light'" />
   </div>
 </template>
