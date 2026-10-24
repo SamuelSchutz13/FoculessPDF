@@ -4,7 +4,6 @@ import type ptBR from './pt-BR'
 const en: typeof ptBR = {
   app: {
     footer: 'Your files are processed in memory and discarded right after. Nothing is stored.',
-    switchLanguage: 'Mudar para português',
     homeTitle: 'PDF tools',
   },
   theme: {
@@ -12,9 +11,11 @@ const en: typeof ptBR = {
     toLight: 'Switch to light mode',
   },
   home: {
-    title: 'Every PDF tool in one place',
-    subtitle:
-      'Merge, split, compress, convert and protect your PDFs right in the browser. Free, no sign-up.',
+    title: 'PDF tools, without the distractions',
+    subtitle: 'No ads, no trackers, no sign-up. Just you, your file and the job at hand.',
+    noAds: 'No ads',
+    noTelemetry: 'No telemetry',
+    noSignup: 'No sign-up',
   },
   dropzone: {
     single: 'Drag the file here or click to choose',
