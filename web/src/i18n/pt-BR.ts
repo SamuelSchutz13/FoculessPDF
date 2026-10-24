@@ -1,7 +1,6 @@
 export default {
   app: {
     footer: 'Seus arquivos são processados na memória e descartados logo em seguida. Nada fica salvo.',
-    switchLanguage: 'Switch to English',
     homeTitle: 'Ferramentas de PDF',
   },
   theme: {
@@ -9,9 +8,11 @@ export default {
     toLight: 'Ativar modo claro',
   },
   home: {
-    title: 'Todas as ferramentas de PDF em um só lugar',
-    subtitle:
-      'Junte, divida, comprima, converta e proteja seus PDFs direto no navegador. Gratuito e sem cadastro.',
+    title: 'Ferramentas de PDF, sem distração',
+    subtitle: 'Nada de anúncios, rastreadores ou cadastro. Só você, seu arquivo e o que precisa ser feito.',
+    noAds: 'Sem anúncios',
+    noTelemetry: 'Sem telemetria',
+    noSignup: 'Sem cadastro',
   },
   dropzone: {
     single: 'Arraste o arquivo aqui ou clique para escolher',

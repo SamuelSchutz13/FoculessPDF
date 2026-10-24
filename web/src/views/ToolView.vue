@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { toast } from 'vue-sonner'
 import FileDropzone from '@/components/FileDropzone.vue'
 import FileList from '@/components/FileList.vue'
+import ToolIcon from '@/components/ToolIcon.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -122,7 +123,7 @@ async function submit() {
     </RouterLink>
 
     <header class="flex items-center gap-3">
-      <component :is="tool.icon" class="size-8 text-primary" aria-hidden="true" />
+      <ToolIcon :tool="tool" />
       <div>
         <h1 class="text-2xl font-bold tracking-tight">{{ title }}</h1>
         <p class="text-muted-foreground">{{ t(`tools.${tool.id}.description`) }}</p>

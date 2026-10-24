@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { FileText } from '@lucide/vue'
 import { useTitle } from '@vueuse/core'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -27,7 +26,7 @@ useTitle(
     <header class="border-b">
       <div class="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
         <RouterLink to="/" class="flex items-center gap-2 font-bold">
-          <FileText class="size-5 text-primary" aria-hidden="true" />
+          <img src="/favicon.svg" alt="" class="size-7" />
           FoculessPDF
         </RouterLink>
         <div class="flex items-center gap-1">
