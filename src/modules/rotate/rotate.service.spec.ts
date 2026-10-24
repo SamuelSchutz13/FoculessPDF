@@ -1,6 +1,6 @@
+import { degrees, PDFDocument } from '@cantoo/pdf-lib';
 import { BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { degrees, PDFDocument } from 'pdf-lib';
 import { RotateService } from './rotate.service';
 
 /** Builds a PDF whose pages start with the given rotations. */

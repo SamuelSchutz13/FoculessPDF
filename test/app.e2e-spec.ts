@@ -1,7 +1,7 @@
+import { PDFDocument } from '@cantoo/pdf-lib';
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { unzipSync } from 'fflate';
-import { PDFDocument } from 'pdf-lib';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';

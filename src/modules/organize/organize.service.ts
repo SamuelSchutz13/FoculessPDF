@@ -1,5 +1,5 @@
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PDFDocument } from 'pdf-lib';
 import { loadPdf } from '../../common/pdf/load-pdf';
 import { parsePageRanges, toPageIndices } from '../../common/pdf/page-ranges';
 

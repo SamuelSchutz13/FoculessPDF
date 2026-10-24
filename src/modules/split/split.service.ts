@@ -1,6 +1,6 @@
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { zipSync } from 'fflate';
-import { PDFDocument } from 'pdf-lib';
 import { MAX_SPLIT_PARTS } from '../../common/constants/file.constants';
 import { loadPdf } from '../../common/pdf/load-pdf';
 import { parsePageRanges, toPageIndices } from '../../common/pdf/page-ranges';

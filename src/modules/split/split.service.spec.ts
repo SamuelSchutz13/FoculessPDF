@@ -1,7 +1,7 @@
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { unzipSync } from 'fflate';
-import { PDFDocument } from 'pdf-lib';
 import { SplitService } from './split.service';
 
 /** Builds a PDF whose pages have the given widths, so page order can be asserted. */
