@@ -13,13 +13,14 @@ import {
 } from '@lucide/vue'
 import type { Component } from 'vue'
 
+/**
+ * Field texts live in the i18n messages under tools.<toolId>.fields.<name>
+ * (label, placeholder, hint, options.<value>).
+ */
 export type ToolField =
   | {
       type: 'text'
       name: string
-      label: string
-      placeholder: string
-      hint?: string
       required: boolean
       /** Renders a password input (masked, no autofill). */
       secret?: boolean
@@ -27,15 +28,14 @@ export type ToolField =
   | {
       type: 'select'
       name: string
-      label: string
-      options: { value: string; label: string }[]
+      /** value is sent to the API; key names its text (values like 0.25 can't be i18n keys). */
+      options: { value: string; key: string }[]
       default: string
     }
 
+/** Title and description live in the i18n messages under tools.<id>. */
 export interface Tool {
   id: string
-  title: string
-  description: string
   icon: Component
   /** Path relative to the API base URL. */
   endpoint: string
@@ -43,19 +43,20 @@ export interface Tool {
   fileField: 'file' | 'files'
   /** Comma-separated MIME types, as in <input accept>. */
   accept: string
-  /** Shown when a file of another type is dropped. */
-  acceptLabel: string
+  /** i18n key under "accept", shown when a file of another type is dropped. */
+  acceptKind: 'pdf' | 'image'
   minFiles: number
   maxFiles: number
   fields: ToolField[]
   /** Shows how much smaller the result is than the upload (for compress). */
   reportsSize?: boolean
-  available: boolean
 }
+
+const options = (...values: string[]) => values.map((value) => ({ value, key: value }))
 
 const pdf = {
   accept: 'application/pdf',
-  acceptLabel: 'PDF',
+  acceptKind: 'pdf',
   fileField: 'file',
   minFiles: 1,
   maxFiles: 1,
@@ -64,8 +65,6 @@ const pdf = {
 export const tools: Tool[] = [
   {
     id: 'merge',
-    title: 'Juntar PDF',
-    description: 'Combine vários PDFs em um só, na ordem que você escolher.',
     icon: Merge,
     endpoint: '/merge',
     ...pdf,
@@ -73,80 +72,16 @@ export const tools: Tool[] = [
     minFiles: 2,
     maxFiles: 20,
     fields: [],
-    available: true,
   },
   {
     id: 'split',
-    title: 'Dividir PDF',
-    description: 'Separe intervalos de páginas em PDFs independentes.',
     icon: Scissors,
     endpoint: '/split',
     ...pdf,
-    fields: [
-      {
-        type: 'text',
-        name: 'ranges',
-        label: 'Intervalos',
-        placeholder: '1-3,5,8-10',
-        hint: 'Cada intervalo vira um PDF. O resultado é um arquivo ZIP.',
-        required: true,
-      },
-    ],
-    available: true,
-  },
-  {
-    id: 'rotate',
-    title: 'Girar PDF',
-    description: 'Gire todas as páginas ou só as que você escolher.',
-    icon: RotateCw,
-    endpoint: '/rotate',
-    ...pdf,
-    fields: [
-      {
-        type: 'select',
-        name: 'angle',
-        label: 'Rotação',
-        options: [
-          { value: '90', label: '90° sentido horário' },
-          { value: '180', label: '180°' },
-          { value: '270', label: '90° sentido anti-horário' },
-        ],
-        default: '90',
-      },
-      {
-        type: 'text',
-        name: 'pages',
-        label: 'Páginas',
-        placeholder: '1,4-5',
-        hint: 'Deixe vazio para girar todas.',
-        required: false,
-      },
-    ],
-    available: true,
-  },
-  {
-    id: 'organize',
-    title: 'Organizar PDF',
-    description: 'Reordene ou remova páginas do seu PDF.',
-    icon: LayoutGrid,
-    endpoint: '/organize',
-    ...pdf,
-    fields: [
-      {
-        type: 'text',
-        name: 'order',
-        label: 'Nova ordem das páginas',
-        placeholder: '3,1,2',
-        hint: 'Páginas que ficarem fora da lista são removidas.',
-        required: true,
-      },
-    ],
-    available: true,
+    fields: [{ type: 'text', name: 'ranges', required: true }],
   },
   {
     id: 'compress',
-    title: 'Comprimir PDF',
-    description: 'Reduza o tamanho do arquivo mantendo a qualidade.',
     icon: Minimize2,
     endpoint: '/compress',
     ...pdf,
@@ -154,87 +89,68 @@ export const tools: Tool[] = [
       {
         type: 'select',
         name: 'level',
-        label: 'Nível de compressão',
-        options: [
-          { value: 'recommended', label: 'Recomendado (boa qualidade, bem menor)' },
-          { value: 'low', label: 'Baixo (qualidade máxima)' },
-          { value: 'extreme', label: 'Extremo (menor arquivo possível)' },
-        ],
+        options: options('recommended', 'low', 'extreme'),
         default: 'recommended',
       },
     ],
     reportsSize: true,
-    available: true,
+  },
+  {
+    id: 'rotate',
+    icon: RotateCw,
+    endpoint: '/rotate',
+    ...pdf,
+    fields: [
+      { type: 'select', name: 'angle', options: options('90', '180', '270'), default: '90' },
+      { type: 'text', name: 'pages', required: false },
+    ],
+  },
+  {
+    id: 'organize',
+    icon: LayoutGrid,
+    endpoint: '/organize',
+    ...pdf,
+    fields: [{ type: 'text', name: 'order', required: true }],
   },
   {
     id: 'image-to-pdf',
-    title: 'JPG para PDF',
-    description: 'Converta imagens JPG ou PNG em um PDF.',
     icon: ImagePlus,
     endpoint: '/convert/image-to-pdf',
     accept: 'image/jpeg,image/png',
-    acceptLabel: 'JPG ou PNG',
+    acceptKind: 'image',
     fileField: 'files',
     minFiles: 1,
     maxFiles: 20,
     fields: [],
-    available: true,
   },
   {
     id: 'pdf-to-image',
-    title: 'PDF para JPG',
-    description: 'Transforme cada página em uma imagem.',
     icon: FileImage,
     endpoint: '/convert/pdf-to-image',
     ...pdf,
-    fields: [
-      {
-        type: 'select',
-        name: 'format',
-        label: 'Formato',
-        options: [
-          { value: 'jpeg', label: 'JPG (arquivos menores)' },
-          { value: 'png', label: 'PNG (sem perda de qualidade)' },
-        ],
-        default: 'jpeg',
-      },
-    ],
-    available: true,
+    fields: [{ type: 'select', name: 'format', options: options('jpeg', 'png'), default: 'jpeg' }],
   },
   {
     id: 'watermark',
-    title: "Marca d'água",
-    description: 'Adicione um texto sobre as páginas do PDF.',
     icon: Droplet,
     endpoint: '/watermark',
     ...pdf,
     fields: [
-      {
-        type: 'text',
-        name: 'text',
-        label: 'Texto',
-        placeholder: 'CONFIDENCIAL',
-        hint: 'Aparece na diagonal, no centro de todas as páginas. Até 100 caracteres.',
-        required: true,
-      },
+      { type: 'text', name: 'text', required: true },
       {
         type: 'select',
         name: 'opacity',
-        label: 'Intensidade',
         options: [
-          { value: '0.25', label: 'Leve' },
-          { value: '0.5', label: 'Média' },
-          { value: '0.75', label: 'Forte' },
+          { value: '0.25', key: 'light' },
+          { value: '0.5', key: 'medium' },
+          { value: '0.75', key: 'strong' },
         ],
         default: '0.5',
       },
     ],
-    available: true,
   },
   {
     id: 'page-numbers',
-    title: 'Números de página',
-    description: 'Numere as páginas do seu PDF.',
     icon: Hash,
     endpoint: '/page-numbers',
     ...pdf,
@@ -242,67 +158,33 @@ export const tools: Tool[] = [
       {
         type: 'select',
         name: 'position',
-        label: 'Posição',
-        options: [
-          { value: 'bottom-center', label: 'Rodapé, centro' },
-          { value: 'bottom-right', label: 'Rodapé, direita' },
-          { value: 'bottom-left', label: 'Rodapé, esquerda' },
-          { value: 'top-center', label: 'Topo, centro' },
-          { value: 'top-right', label: 'Topo, direita' },
-          { value: 'top-left', label: 'Topo, esquerda' },
-        ],
+        options: options(
+          'bottom-center',
+          'bottom-right',
+          'bottom-left',
+          'top-center',
+          'top-right',
+          'top-left',
+        ),
         default: 'bottom-center',
       },
-      {
-        type: 'text',
-        name: 'startAt',
-        label: 'Começar em',
-        placeholder: '1',
-        hint: 'Número da primeira página. Deixe vazio para começar em 1.',
-        required: false,
-      },
+      { type: 'text', name: 'startAt', required: false },
     ],
-    available: true,
   },
   {
     id: 'protect',
-    title: 'Proteger PDF',
-    description: 'Adicione uma senha ao seu PDF.',
     icon: Lock,
     endpoint: '/security/protect',
     ...pdf,
-    fields: [
-      {
-        type: 'text',
-        name: 'password',
-        label: 'Senha',
-        placeholder: 'Mínimo de 4 caracteres',
-        hint: 'A senha será pedida para abrir o PDF. Guarde-a: não é possível recuperá-la.',
-        required: true,
-        secret: true,
-      },
-    ],
-    available: true,
+    fields: [{ type: 'text', name: 'password', required: true, secret: true }],
   },
   {
     id: 'unlock',
-    title: 'Desbloquear PDF',
-    description: 'Remova a senha de um PDF.',
     icon: LockOpen,
     endpoint: '/security/unlock',
     ...pdf,
-    fields: [
-      {
-        type: 'text',
-        name: 'password',
-        label: 'Senha atual do PDF',
-        placeholder: 'Digite a senha',
-        required: true,
-        secret: true,
-      },
-    ],
-    available: true,
+    fields: [{ type: 'text', name: 'password', required: true, secret: true }],
   },
 ]
 
-export const findTool = (id: string) => tools.find((tool) => tool.id === id && tool.available)
+export const findTool = (id: string) => tools.find((tool) => tool.id === id)

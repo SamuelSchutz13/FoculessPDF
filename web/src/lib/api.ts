@@ -1,8 +1,14 @@
 import axios, { AxiosError } from 'axios'
+import { i18n } from '@/i18n'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api/v1',
 })
+
+/** Must match the API's MAX_FILE_SIZE_MB; checked here to skip uploads that would be rejected. */
+export const MAX_FILE_SIZE_MB = Number(import.meta.env.VITE_MAX_FILE_SIZE_MB ?? 50)
+
+const { t } = i18n.global
 
 export interface ToolResult {
   blob: Blob
@@ -46,8 +52,8 @@ export function filenameFrom(contentDisposition?: string): string | undefined {
 }
 
 export async function errorMessages(error: unknown): Promise<string[]> {
-  if (!(error instanceof AxiosError)) return ['Erro inesperado. Tente novamente.']
-  if (!error.response) return ['Não foi possível conectar à API. Ela está rodando?']
+  if (!(error instanceof AxiosError)) return [t('api.unexpected')]
+  if (!error.response) return [t('api.unreachable')]
 
   // With responseType "blob", error bodies arrive as a Blob too, so the JSON is read back.
   const data: unknown = error.response.data
@@ -57,5 +63,5 @@ export async function errorMessages(error: unknown): Promise<string[]> {
   } catch {
     // Not JSON (e.g. a proxy error page): fall through to the generic message.
   }
-  return [`Erro ${error.response.status} ao processar o arquivo.`]
+  return [t('api.status', { status: error.response.status })]
 }

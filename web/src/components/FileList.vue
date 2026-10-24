@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ArrowDown, ArrowUp, FileText, X } from '@lucide/vue'
+import { useI18n } from 'vue-i18n'
 import { Button } from '@/components/ui/button'
 import { formatSize } from '@/lib/download'
 
 defineProps<{ files: File[]; reorderable: boolean }>()
 const emit = defineEmits<{ remove: [index: number]; move: [index: number, offset: number] }>()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -23,7 +25,7 @@ const emit = defineEmits<{ remove: [index: number]; move: [index: number, offset
           variant="ghost"
           size="icon"
           :disabled="index === 0"
-          :aria-label="`Mover ${file.name} para cima`"
+          :aria-label="t('fileList.moveUp', { name: file.name })"
           @click="emit('move', index, -1)"
         >
           <ArrowUp />
@@ -32,7 +34,7 @@ const emit = defineEmits<{ remove: [index: number]; move: [index: number, offset
           variant="ghost"
           size="icon"
           :disabled="index === files.length - 1"
-          :aria-label="`Mover ${file.name} para baixo`"
+          :aria-label="t('fileList.moveDown', { name: file.name })"
           @click="emit('move', index, 1)"
         >
           <ArrowDown />
@@ -41,7 +43,7 @@ const emit = defineEmits<{ remove: [index: number]; move: [index: number, offset
       <Button
         variant="ghost"
         size="icon"
-        :aria-label="`Remover ${file.name}`"
+        :aria-label="t('fileList.remove', { name: file.name })"
         @click="emit('remove', index)"
       >
         <X />
