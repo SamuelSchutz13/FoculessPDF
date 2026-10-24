@@ -138,6 +138,8 @@ async function submit() {
           <Input
             :id="field.name"
             v-model="values[field.name]"
+            :type="field.secret ? 'password' : 'text'"
+            :autocomplete="field.secret ? 'off' : undefined"
             :placeholder="field.placeholder"
             :aria-describedby="field.hint ? `${field.name}-hint` : undefined"
           />

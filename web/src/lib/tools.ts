@@ -21,6 +21,8 @@ export type ToolField =
       placeholder: string
       hint?: string
       required: boolean
+      /** Renders a password input (masked, no autofill). */
+      secret?: boolean
     }
   | {
       type: 'select'
@@ -187,8 +189,18 @@ export const tools: Tool[] = [
     icon: Lock,
     endpoint: '/security/protect',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'text',
+        name: 'password',
+        label: 'Senha',
+        placeholder: 'Mínimo de 4 caracteres',
+        hint: 'A senha será pedida para abrir o PDF. Guarde-a: não é possível recuperá-la.',
+        required: true,
+        secret: true,
+      },
+    ],
+    available: true,
   },
   {
     id: 'unlock',
@@ -197,8 +209,17 @@ export const tools: Tool[] = [
     icon: LockOpen,
     endpoint: '/security/unlock',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'text',
+        name: 'password',
+        label: 'Senha atual do PDF',
+        placeholder: 'Digite a senha',
+        required: true,
+        secret: true,
+      },
+    ],
+    available: true,
   },
 ]
 
