@@ -1,7 +1,9 @@
 import { inflateSync } from 'node:zlib';
 import { PDFDocument } from '@cantoo/pdf-lib';
-import { NotImplementedException, UnprocessableEntityException } from '@nestjs/common';
+import { loadImage } from '@napi-rs/canvas';
+import { BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { unzipSync } from 'fflate';
 import { png, TINY_JPEG, withExifOrientation } from '../../../test/fixtures/images';
 import { ConvertService } from './convert.service';
 import { ImageFormat } from './dto/pdf-to-image.dto';
@@ -114,9 +116,37 @@ describe('ConvertService', () => {
     });
   });
 
-  it('pdfToImage is not implemented yet', async () => {
-    await expect(service.pdfToImage(Buffer.alloc(0), ImageFormat.Png)).rejects.toThrow(
-      NotImplementedException,
-    );
+  describe('pdfToImage', () => {
+    async function pdfWithPages(count: number): Promise<Buffer> {
+      const doc = await PDFDocument.create();
+      for (let i = 0; i < count; i++) doc.addPage([600, 800]);
+      return Buffer.from(await doc.save());
+    }
+
+    it('renders every page as a JPEG at 150 DPI inside a ZIP', async () => {
+      const files = unzipSync(await service.pdfToImage(await pdfWithPages(2), ImageFormat.Jpeg));
+
+      expect(Object.keys(files)).toEqual(['page-1.jpg', 'page-2.jpg']);
+      const image = await loadImage(Buffer.from(files['page-1.jpg']));
+      // 600 × 800 pt at 150/72 px per pt.
+      expect([image.width, image.height]).toEqual([1250, 1667]);
+    });
+
+    it('renders PNG when asked', async () => {
+      const files = unzipSync(await service.pdfToImage(await pdfWithPages(1), ImageFormat.Png));
+      expect(Buffer.from(files['page-1.png']).subarray(0, 4).toString('hex')).toBe('89504e47');
+    });
+
+    it('rejects PDFs with too many pages', async () => {
+      await expect(service.pdfToImage(await pdfWithPages(101), ImageFormat.Jpeg)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+
+    it('rejects a file that is not a valid PDF', async () => {
+      await expect(service.pdfToImage(Buffer.from('not a pdf'), ImageFormat.Jpeg)).rejects.toThrow(
+        UnprocessableEntityException,
+      );
+    });
   });
 });

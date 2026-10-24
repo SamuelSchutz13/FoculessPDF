@@ -1,11 +1,18 @@
 import { degrees, PDFDocument, type PDFImage } from '@cantoo/pdf-lib';
-import { Injectable, NotImplementedException, UnprocessableEntityException } from '@nestjs/common';
-import type { ImageFormat } from './dto/pdf-to-image.dto';
+import { BadRequestException, Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { zipSync } from 'fflate';
+import { loadPdf } from '../../common/pdf/load-pdf';
+import { ImageFormat } from './dto/pdf-to-image.dto';
 import { readJpegOrientation } from './jpeg-orientation';
+import { renderPages } from './render-pages';
 
 /** A4 portrait, in points. Landscape images get the page turned sideways. */
 const A4 = { width: 595.28, height: 841.89 };
 const MARGIN = 20;
+
+/** Every rendered page stays in memory until the ZIP is built, so cap the page count. */
+const MAX_RENDERED_PAGES = 100;
+const JPEG_QUALITY = 85;
 
 const isPng = (bytes: Buffer) => bytes.subarray(0, 4).toString('hex') === '89504e47';
 
@@ -79,9 +86,28 @@ export class ConvertService {
     return doc.save();
   }
 
-  /** Returns a ZIP with one image per page. */
-  async pdfToImage(_file: Buffer, _format: ImageFormat): Promise<Uint8Array> {
-    throw new NotImplementedException('PDF to image is not implemented yet');
+  /** Returns a ZIP with one image per page: page-1.jpg, page-2.jpg, … */
+  async pdfToImage(file: Buffer, format: ImageFormat): Promise<Uint8Array> {
+    // Parsing with pdf-lib first gives the same 422 messages as the other tools.
+    const pageCount = (await loadPdf(file)).getPageCount();
+    if (pageCount > MAX_RENDERED_PAGES) {
+      throw new BadRequestException(
+        `PDF to image supports up to ${MAX_RENDERED_PAGES} pages; this file has ${pageCount}`,
+      );
+    }
+
+    const entries: Record<string, Uint8Array> = {};
+    // shortcut: renders on the main thread, blocking other requests while it runs;
+    // move to a worker thread (piscina) when concurrent conversions become common.
+    await renderPages(file, (canvas, pageNumber) => {
+      entries[`page-${pageNumber}.${format === ImageFormat.Png ? 'png' : 'jpg'}`] =
+        format === ImageFormat.Png
+          ? canvas.toBuffer('image/png')
+          : canvas.toBuffer('image/jpeg', JPEG_QUALITY);
+    });
+
+    // level 0: JPEG/PNG are already compressed.
+    return zipSync(entries, { level: 0 });
   }
 
   private async embedImage(doc: PDFDocument, bytes: Buffer, position: number): Promise<PDFImage> {

@@ -172,8 +172,19 @@ export const tools: Tool[] = [
     icon: FileImage,
     endpoint: '/convert/pdf-to-image',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'select',
+        name: 'format',
+        label: 'Formato',
+        options: [
+          { value: 'jpeg', label: 'JPG (arquivos menores)' },
+          { value: 'png', label: 'PNG (sem perda de qualidade)' },
+        ],
+        default: 'jpeg',
+      },
+    ],
+    available: true,
   },
   {
     id: 'watermark',
