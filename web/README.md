@@ -49,6 +49,10 @@ src/
 └── components/
     ├── FileDropzone.vue  # área de arrastar/soltar
     ├── FileList.vue      # lista de arquivos (reordenar/remover)
+    ├── ToolIcon.vue      # ladrilho pastel com o ícone de cada ferramenta
+    ├── LanguageToggle.vue # bandeiras para trocar o idioma
+    ├── ThemeToggle.vue   # modo claro/escuro
+    ├── GithubLink.vue    # link para o repositório
     └── ui/               # componentes do shadcn-vue
 ```
 
