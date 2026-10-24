@@ -1,13 +1,18 @@
 # FoculessPDF
 
-API REST para ferramentas de arquivos PDF (inspirada no iLovePDF), feita com NestJS 12.
+Ferramentas de PDF (inspiradas no iLovePDF): uma API REST em NestJS 12 na raiz e o front-end em Vue na pasta [`web/`](web/README.md).
 
 ## Stack
 
-- **NestJS 12** + Express + TypeScript 6
-- **Swagger** (OpenAPI) em `/docs` (JSON em `/docs-json`)
-- **Jest** + Supertest para testes unitários e e2e
-- **Biome** para lint e formatação
+- **API:** NestJS 12 + Express + TypeScript 6, Swagger em `/docs` (JSON em `/docs-json`), Jest + Supertest, Biome
+- **Front-end:** Vue 3 + Vite + Tailwind 4 + shadcn-vue, Vitest
+
+## Rodando tudo
+
+```bash
+npm install && npm run start:dev          # API em http://localhost:3000
+cd web && npm install && npm run dev      # front em http://localhost:5173
+```
 
 ## Começando
 
