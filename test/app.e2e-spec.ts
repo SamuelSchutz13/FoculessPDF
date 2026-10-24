@@ -89,8 +89,32 @@ describe('App (e2e)', () => {
       .expect(400);
   });
 
-  it('POST /api/v1/compress without a file returns 422', () => {
-    return request(app.getHttpServer()).post('/api/v1/compress').expect(422);
+  it('POST /api/v1/organize returns the pages in the new order', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/api/v1/organize')
+      .attach('file', await pdfWithPages(3), { ...pdfFile, filename: 'a.pdf' })
+      .field('order', '3,1')
+      .responseType('blob')
+      .expect(200)
+      .expect('Content-Type', 'application/pdf')
+      .expect('Content-Disposition', 'attachment; filename="organized.pdf"');
+
+    expect((await PDFDocument.load(res.body)).getPageCount()).toBe(2);
+  });
+
+  it('POST /api/v1/compress without a file returns 422 in the standard error shape', () => {
+    return request(app.getHttpServer())
+      .post('/api/v1/compress')
+      .expect(422)
+      .expect({ statusCode: 422, error: 'Unprocessable Entity', message: ['File is required'] });
+  });
+
+  it('allows the front-end origin and exposes Content-Disposition', () => {
+    return request(app.getHttpServer())
+      .get('/api/v1/health')
+      .set('Origin', 'http://localhost:5173')
+      .expect('Access-Control-Allow-Origin', 'http://localhost:5173')
+      .expect('Access-Control-Expose-Headers', 'Content-Disposition');
   });
 
   it('POST /api/v1/compress rejects a non-PDF file', () => {
