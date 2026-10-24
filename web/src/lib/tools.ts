@@ -41,14 +41,23 @@ export interface Tool {
   endpoint: string
   /** Multipart field name the API expects: "files" for multi-file tools, "file" otherwise. */
   fileField: 'file' | 'files'
+  /** Comma-separated MIME types, as in <input accept>. */
   accept: string
+  /** Shown when a file of another type is dropped. */
+  acceptLabel: string
   minFiles: number
   maxFiles: number
   fields: ToolField[]
   available: boolean
 }
 
-const pdf = { accept: 'application/pdf', fileField: 'file', minFiles: 1, maxFiles: 1 } as const
+const pdf = {
+  accept: 'application/pdf',
+  acceptLabel: 'PDF',
+  fileField: 'file',
+  minFiles: 1,
+  maxFiles: 1,
+} as const
 
 export const tools: Tool[] = [
   {
@@ -148,9 +157,13 @@ export const tools: Tool[] = [
     description: 'Converta imagens JPG ou PNG em um PDF.',
     icon: ImagePlus,
     endpoint: '/convert/image-to-pdf',
-    ...pdf,
+    accept: 'image/jpeg,image/png',
+    acceptLabel: 'JPG ou PNG',
+    fileField: 'files',
+    minFiles: 1,
+    maxFiles: 20,
     fields: [],
-    available: false,
+    available: true,
   },
   {
     id: 'pdf-to-image',
@@ -159,8 +172,19 @@ export const tools: Tool[] = [
     icon: FileImage,
     endpoint: '/convert/pdf-to-image',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'select',
+        name: 'format',
+        label: 'Formato',
+        options: [
+          { value: 'jpeg', label: 'JPG (arquivos menores)' },
+          { value: 'png', label: 'PNG (sem perda de qualidade)' },
+        ],
+        default: 'jpeg',
+      },
+    ],
+    available: true,
   },
   {
     id: 'watermark',
@@ -169,8 +193,28 @@ export const tools: Tool[] = [
     icon: Droplet,
     endpoint: '/watermark',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'text',
+        name: 'text',
+        label: 'Texto',
+        placeholder: 'CONFIDENCIAL',
+        hint: 'Aparece na diagonal, no centro de todas as páginas. Até 100 caracteres.',
+        required: true,
+      },
+      {
+        type: 'select',
+        name: 'opacity',
+        label: 'Intensidade',
+        options: [
+          { value: '0.25', label: 'Leve' },
+          { value: '0.5', label: 'Média' },
+          { value: '0.75', label: 'Forte' },
+        ],
+        default: '0.5',
+      },
+    ],
+    available: true,
   },
   {
     id: 'page-numbers',
@@ -179,8 +223,31 @@ export const tools: Tool[] = [
     icon: Hash,
     endpoint: '/page-numbers',
     ...pdf,
-    fields: [],
-    available: false,
+    fields: [
+      {
+        type: 'select',
+        name: 'position',
+        label: 'Posição',
+        options: [
+          { value: 'bottom-center', label: 'Rodapé, centro' },
+          { value: 'bottom-right', label: 'Rodapé, direita' },
+          { value: 'bottom-left', label: 'Rodapé, esquerda' },
+          { value: 'top-center', label: 'Topo, centro' },
+          { value: 'top-right', label: 'Topo, direita' },
+          { value: 'top-left', label: 'Topo, esquerda' },
+        ],
+        default: 'bottom-center',
+      },
+      {
+        type: 'text',
+        name: 'startAt',
+        label: 'Começar em',
+        placeholder: '1',
+        hint: 'Número da primeira página. Deixe vazio para começar em 1.',
+        required: false,
+      },
+    ],
+    available: true,
   },
   {
     id: 'protect',
