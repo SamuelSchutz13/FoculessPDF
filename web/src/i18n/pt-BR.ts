@@ -2,6 +2,7 @@ export default {
   app: {
     footer: 'Seus arquivos são processados na memória e descartados logo em seguida. Nada fica salvo.',
     homeTitle: 'Ferramentas de PDF',
+    github: 'Código-fonte no GitHub',
   },
   theme: {
     toDark: 'Ativar modo escuro',

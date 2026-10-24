@@ -3,6 +3,7 @@ import { useTitle } from '@vueuse/core'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import GithubLink from '@/components/GithubLink.vue'
 import LanguageToggle from '@/components/LanguageToggle.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 import { Toaster } from '@/components/ui/sonner'
@@ -32,6 +33,7 @@ useTitle(
         <div class="flex items-center gap-1">
           <LanguageToggle />
           <ThemeToggle />
+          <GithubLink />
         </div>
       </div>
     </header>

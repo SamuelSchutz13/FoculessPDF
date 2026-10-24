@@ -5,6 +5,7 @@ const en: typeof ptBR = {
   app: {
     footer: 'Your files are processed in memory and discarded right after. Nothing is stored.',
     homeTitle: 'PDF tools',
+    github: 'Source code on GitHub',
   },
   theme: {
     toDark: 'Switch to dark mode',
