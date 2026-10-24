@@ -1,7 +1,7 @@
+import { PDFDocument } from '@cantoo/pdf-lib';
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { unzipSync } from 'fflate';
-import { PDFDocument } from 'pdf-lib';
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
@@ -100,6 +100,26 @@ describe('App (e2e)', () => {
       .expect('Content-Disposition', 'attachment; filename="organized.pdf"');
 
     expect((await PDFDocument.load(res.body)).getPageCount()).toBe(2);
+  });
+
+  it('POST /api/v1/security/protect then /unlock round-trips the PDF', async () => {
+    const server = app.getHttpServer();
+    const protectedPdf = await request(server)
+      .post('/api/v1/security/protect')
+      .attach('file', await pdfWithPages(2), { ...pdfFile, filename: 'a.pdf' })
+      .field('password', 'secret')
+      .responseType('blob')
+      .expect(200)
+      .expect('Content-Disposition', 'attachment; filename="protected.pdf"');
+
+    const unlocked = await request(server)
+      .post('/api/v1/security/unlock')
+      .attach('file', protectedPdf.body, { ...pdfFile, filename: 'protected.pdf' })
+      .field('password', 'secret')
+      .responseType('blob')
+      .expect(200);
+
+    expect((await PDFDocument.load(unlocked.body)).getPageCount()).toBe(2);
   });
 
   it('POST /api/v1/compress without a file returns 422 in the standard error shape', () => {

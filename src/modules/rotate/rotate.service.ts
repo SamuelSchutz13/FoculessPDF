@@ -1,5 +1,5 @@
+import { degrees } from '@cantoo/pdf-lib';
 import { Injectable } from '@nestjs/common';
-import { degrees } from 'pdf-lib';
 import { loadPdf } from '../../common/pdf/load-pdf';
 import { parsePageRanges, toPageIndices } from '../../common/pdf/page-ranges';
 import type { RotationAngle } from './dto/rotate.dto';

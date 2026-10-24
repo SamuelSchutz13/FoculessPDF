@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, Length } from 'class-validator';
 
-/** Shared by protect and unlock: a PDF plus its password. */
-export class PasswordDto {
+export class UnlockDto {
   @ApiProperty({ type: 'string', format: 'binary' })
   file: Express.Multer.File;
 
-  @ApiProperty({ format: 'password', minLength: 4, maxLength: 128 })
+  // No 4-char minimum here: the PDF may have been protected elsewhere with a shorter password.
+  @ApiProperty({ format: 'password', minLength: 1, maxLength: 128 })
   @IsString()
-  @Length(4, 128)
+  @Length(1, 128)
   password: string;
 }

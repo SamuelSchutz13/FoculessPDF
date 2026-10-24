@@ -1,6 +1,6 @@
+import { PDFDocument } from '@cantoo/pdf-lib';
 import { UnprocessableEntityException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { PDFDocument } from 'pdf-lib';
 import { MergeService } from './merge.service';
 
 /** Builds a PDF whose pages have the given widths, so page order can be asserted. */

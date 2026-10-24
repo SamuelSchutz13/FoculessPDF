@@ -1,16 +1,24 @@
-import { UnprocessableEntityException } from '@nestjs/common';
-import { EncryptedPDFError, PDFDocument } from 'pdf-lib';
+import { EncryptedPDFError, PDFDocument } from '@cantoo/pdf-lib';
+import { BadRequestException, UnprocessableEntityException } from '@nestjs/common';
 
-/**
- * Parses an uploaded PDF, turning parser errors into 422 instead of 500.
- * The upload pipe only checks the file header, so the body may still be corrupt or encrypted.
- */
-export async function loadPdf(file: Buffer, label = 'File'): Promise<PDFDocument> {
+export async function loadPdf(
+  file: Buffer,
+  label = 'File',
+  password?: string,
+): Promise<PDFDocument> {
   try {
-    return await PDFDocument.load(file);
+    return await PDFDocument.load(file, { password });
   } catch (error) {
     if (error instanceof EncryptedPDFError) {
       throw new UnprocessableEntityException(`${label} is password-protected; unlock it first`);
+    }
+    // @cantoo/pdf-lib throws a plain Error here, so its message is the only signal.
+    if (
+      password !== undefined &&
+      error instanceof Error &&
+      error.message === 'Password incorrect'
+    ) {
+      throw new BadRequestException('Incorrect password');
     }
     throw new UnprocessableEntityException(`${label} is not a valid PDF`);
   }

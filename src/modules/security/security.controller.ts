@@ -14,7 +14,8 @@ import { MimeType, uploadOptions } from '../../common/constants/file.constants';
 import { ApiFileOperation } from '../../common/decorators/api-file-operation.decorator';
 import { fileResponse } from '../../common/files/file-response';
 import { PdfFilePipe } from '../../common/files/file-validation.pipes';
-import { PasswordDto } from './dto/password.dto';
+import { ProtectDto } from './dto/protect.dto';
+import { UnlockDto } from './dto/unlock.dto';
 import { SecurityService } from './security.service';
 
 @ApiTags('Security')
@@ -26,13 +27,13 @@ export class SecurityController {
   @HttpCode(HttpStatus.OK)
   @ApiFileOperation({
     summary: 'Encrypt a PDF with a password',
-    body: PasswordDto,
+    body: ProtectDto,
     produces: MimeType.PDF,
   })
   @UseInterceptors(FileInterceptor('file', uploadOptions))
   async protect(
     @UploadedFile(PdfFilePipe) file: Express.Multer.File,
-    @Body() dto: PasswordDto,
+    @Body() dto: ProtectDto,
   ): Promise<StreamableFile> {
     const pdf = await this.securityService.protect(file.buffer, dto.password);
     return fileResponse(pdf, 'protected.pdf', MimeType.PDF);
@@ -42,13 +43,13 @@ export class SecurityController {
   @HttpCode(HttpStatus.OK)
   @ApiFileOperation({
     summary: 'Remove the password from a PDF',
-    body: PasswordDto,
+    body: UnlockDto,
     produces: MimeType.PDF,
   })
   @UseInterceptors(FileInterceptor('file', uploadOptions))
   async unlock(
     @UploadedFile(PdfFilePipe) file: Express.Multer.File,
-    @Body() dto: PasswordDto,
+    @Body() dto: UnlockDto,
   ): Promise<StreamableFile> {
     const pdf = await this.securityService.unlock(file.buffer, dto.password);
     return fileResponse(pdf, 'unlocked.pdf', MimeType.PDF);
