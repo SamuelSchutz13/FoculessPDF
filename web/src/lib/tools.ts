@@ -41,14 +41,23 @@ export interface Tool {
   endpoint: string
   /** Multipart field name the API expects: "files" for multi-file tools, "file" otherwise. */
   fileField: 'file' | 'files'
+  /** Comma-separated MIME types, as in <input accept>. */
   accept: string
+  /** Shown when a file of another type is dropped. */
+  acceptLabel: string
   minFiles: number
   maxFiles: number
   fields: ToolField[]
   available: boolean
 }
 
-const pdf = { accept: 'application/pdf', fileField: 'file', minFiles: 1, maxFiles: 1 } as const
+const pdf = {
+  accept: 'application/pdf',
+  acceptLabel: 'PDF',
+  fileField: 'file',
+  minFiles: 1,
+  maxFiles: 1,
+} as const
 
 export const tools: Tool[] = [
   {
@@ -148,9 +157,13 @@ export const tools: Tool[] = [
     description: 'Converta imagens JPG ou PNG em um PDF.',
     icon: ImagePlus,
     endpoint: '/convert/image-to-pdf',
-    ...pdf,
+    accept: 'image/jpeg,image/png',
+    acceptLabel: 'JPG ou PNG',
+    fileField: 'files',
+    minFiles: 1,
+    maxFiles: 20,
     fields: [],
-    available: false,
+    available: true,
   },
   {
     id: 'pdf-to-image',

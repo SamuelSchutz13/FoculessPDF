@@ -42,9 +42,9 @@ const canSubmit = computed(
 
 function addFiles(added: File[]) {
   // Quick client-side check for a friendlier message; the API validates the real content.
-  const accepted = added.filter((file) => file.type === props.tool.accept)
+  const accepted = added.filter((file) => props.tool.accept.split(',').includes(file.type))
   for (const file of added.filter((file) => !accepted.includes(file))) {
-    toast.warning(`"${file.name}" não é um PDF e foi ignorado.`)
+    toast.warning(`"${file.name}" não é um arquivo ${props.tool.acceptLabel} e foi ignorado.`)
   }
 
   files.value = multiple.value ? [...files.value, ...accepted] : accepted.slice(0, 1)
@@ -110,7 +110,7 @@ async function submit() {
       @remove="files.splice($event, 1)"
       @move="moveFile"
     />
-    <p v-if="multiple && files.length < tool.minFiles" class="text-sm text-muted-foreground">
+    <p v-if="tool.minFiles > 1 && files.length < tool.minFiles" class="text-sm text-muted-foreground">
       Adicione pelo menos {{ tool.minFiles }} arquivos.
     </p>
 
